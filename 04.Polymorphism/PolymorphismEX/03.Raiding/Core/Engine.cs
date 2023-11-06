@@ -43,6 +43,7 @@ namespace _03.Raiding.Core
                 catch (ArgumentException ex)
                 {
                     writer.WriteLine(ex.Message);
+                    i--;
                 }
             }
 
