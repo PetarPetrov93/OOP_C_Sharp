@@ -123,6 +123,7 @@ namespace RobotFactory.Tests
             string expectedResult = "Supplement: Laser IS: 15";
 
             Assert.AreEqual(expectedResult , actualResult);
+            Assert.AreEqual(1, factory.Supplements.Count);
         }
 
         [Test]
