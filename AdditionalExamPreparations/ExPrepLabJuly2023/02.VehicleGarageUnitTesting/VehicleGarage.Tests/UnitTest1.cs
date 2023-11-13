@@ -54,6 +54,7 @@ namespace VehicleGarage.Tests
             garage.AddVehicle(vehicle);
 
             Assert.IsFalse(garage.AddVehicle(vehicle2));
+            Assert.AreEqual(1, garage.Vehicles.Count);
             
         }
 
@@ -66,6 +67,7 @@ namespace VehicleGarage.Tests
             garage.AddVehicle(vehicle);
 
             Assert.IsFalse(garage.AddVehicle(vehicle2));
+            Assert.AreEqual(1, garage.Vehicles.Count);
         }
 
         [Test]
@@ -73,14 +75,19 @@ namespace VehicleGarage.Tests
         {
             Vehicle vehicle = new Vehicle("Ferarri", "Enzo", "BT2777KH");
             Vehicle vehicle2 = new Vehicle("Mercedes", "E63AMG", "BT7777KH");
+            Vehicle vehicle3 = new Vehicle("MBW", "M5", "BT1777KH");
             Garage garage = new Garage(5);
             garage.AddVehicle(vehicle);
             garage.AddVehicle(vehicle2);
+            garage.AddVehicle(vehicle3);
 
             garage.DriveVehicle("BT7777KH", 50, false);
+            garage.DriveVehicle("BT1777KH", 90, false);
 
-            Assert.AreEqual(1, garage.ChargeVehicles(90));
+            Assert.AreEqual(2, garage.ChargeVehicles(90));
             Assert.AreEqual(100, vehicle2.BatteryLevel);
+            Assert.AreEqual(100, vehicle.BatteryLevel);
+            Assert.AreEqual(100, vehicle3.BatteryLevel);
         }
         [Test]
         public void ChargeVehiclesShouldReturnTheCorrecCount()
@@ -169,7 +176,6 @@ namespace VehicleGarage.Tests
         public void RepairedVehiclesShouldWorkProperly()
         {
             Vehicle vehicle = new Vehicle("Ferarri", "Enzo", "BT2777KH");
-            vehicle.IsDamaged = true;
 
             Vehicle vehicle2 = new Vehicle("Mercedes", "E63AMG", "BT7777KH");
 
@@ -177,10 +183,11 @@ namespace VehicleGarage.Tests
 
             garage.AddVehicle(vehicle);
             garage.AddVehicle(vehicle2);
-
+            garage.DriveVehicle("BT2777KH", 40, true);
             garage.RepairVehicles();
 
             Assert.IsFalse(vehicle.IsDamaged);
+
 
         }
         [Test]
@@ -188,15 +195,20 @@ namespace VehicleGarage.Tests
         {
             Garage garage = new Garage(5);
             Vehicle vehicle = new Vehicle("Ferarri", "Enzo", "BT2777KH");
-            vehicle.IsDamaged = true;
+            Vehicle vehicle2 = new Vehicle("BMW", "M30", "BT1777KH");
             Vehicle vehicle3 = new Vehicle("Ford", "Fiesta", "BT2567KH");
-            vehicle3.IsDamaged = true;
             garage.AddVehicle(vehicle3);
+            garage.AddVehicle(vehicle2);
             garage.AddVehicle(vehicle);
+
+            garage.DriveVehicle("BT2777KH", 60, true);
+            garage.DriveVehicle("BT2567KH", 40, true);
 
             Assert.AreEqual("Vehicles repaired: 2", garage.RepairVehicles());
             Assert.IsFalse(vehicle.IsDamaged);
             Assert.IsFalse(vehicle3.IsDamaged);
+            Assert.AreEqual(40, vehicle.BatteryLevel);
+            Assert.AreEqual(60, vehicle3.BatteryLevel);
         }
     }
 }
